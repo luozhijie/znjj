@@ -43,7 +43,6 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
 						new DeviceType(rs.getInt("device_type_id"), rs.getString("device_type_name")),
 						rs.getInt("device_online"));
 				deviceList.add(device);
-				deviceList.add(device);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

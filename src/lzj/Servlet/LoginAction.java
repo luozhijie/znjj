@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import lzj.DAO.UserDao;
 import lzj.DaoImpl.UserDaoImpl;
 import lzj.entity.User;
@@ -31,12 +33,16 @@ public class LoginAction extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.findUserByUserNameAndPassWord(username, password);
-		request.getSession().setAttribute("userObj", user);
-		response.sendRedirect("index.jsp");
+		// request.getSession().setAttribute("userObj", user);
+		Gson gson = new Gson();
+		String info = gson.toJson(user);
+		response.getWriter().print(info);
+		// response.sendRedirect("index.jsp");
 	}
 
 	/**
