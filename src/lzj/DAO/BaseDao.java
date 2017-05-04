@@ -11,7 +11,7 @@ public class BaseDao {
 	// 驱动程序名
 	String driver = "com.mysql.jdbc.Driver";
 	// URL指向要访问的数据库名news
-	String url = "jdbc:mysql://localhost:3306/shop?useUnicode=true&characterEncoding=utf-8";
+	String url = "jdbc:mysql://localhost:3306/shop?useUnicode=true&characterEncoding=utf-8&useSSL=true";
 	// MySQL配置时的用户名
 	String user = "root";
 	// MySQL配置时的密码

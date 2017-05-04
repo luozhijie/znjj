@@ -33,7 +33,7 @@ public class DeviceTypeDaoImpl extends BaseDao implements DeviceTypeDao {
 		ResultSet rs = this.execeuteQuary(sql, null);
 		ArrayList<DeviceType> deviceTypeList = new ArrayList<>();
 		try {
-			if (rs.next()) {
+			while (rs.next()) {
 				DeviceType deviceType = new DeviceType(rs.getInt("device_type_id"), rs.getString("device_type_name"));
 				deviceTypeList.add(deviceType);
 			}

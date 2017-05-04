@@ -13,9 +13,9 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
 
 	@Override
 	public int addDevice(Device device) {
-		String sql = "INSERT INTO `znjj`.` device_list` (`user_id`, ` device_name`, `device_stat`, `device_type_id`, ` device_online`) VALUES (?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO `znjj`.`device_list` (`user_id`, ` device_name`, `device_type_id`, `device_gpio`) VALUES (?, ?, ?, ?);";
 		return this.exceuteUpdate(sql, new Object[] { device.getUserId(), device.getDeviceName(),
-				device.getDeviceStat(), device.getDeviceType().getDeviceTypeId(), device.getDevice_onLine() });
+				device.getDeviceType().getDeviceTypeId(), device.getDevice_gpio() });
 	}
 
 	@Override
@@ -25,10 +25,10 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
 
 	@Override
 	public int updateDevice(Device device) {
-		String sql = "UPDATE `znjj`.` device_list` SET `user_id`=?, ` device_name`=?, `device_stat`=?, `device_type_id`=?, ` device_online`=? WHERE `device_id`=?;";
+		String sql = "UPDATE `znjj`.` device_list` SET `user_id`=?, ` device_name`=?, `device_stat`=?, `device_type_id`=?,`device_online`=now() WHERE `device_id`=?;";
 
 		return this.exceuteUpdate(sql, new Object[] { device.getUserId(), device.getDeviceName(),
-				device.getDeviceStat(), device.getDeviceType(), device.getDevice_onLine(), device.getDeviceId() });
+				device.getDeviceStat(), device.getDeviceType(), device.getDeviceId() });
 	}
 
 	@Override
@@ -41,15 +41,27 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
 				Device device = new Device(rs.getInt("device_id"), rs.getInt("user_id"), rs.getString("device_name"),
 						rs.getString("device_stat"),
 						new DeviceType(rs.getInt("device_type_id"), rs.getString("device_type_name")),
-						rs.getInt("device_online"));
+						rs.getString("device_online"), rs.getInt("device_gpio"));
 				deviceList.add(device);
+				// this.flashDeviceOnline(rs.getInt("device_id"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			this.closeAll();
 		}
+		for (Device device : deviceList) {
+			this.exceuteUpdate("UPDATE `znjj`.`device_list` SET ` device_online`=now() WHERE `device_id`=?;",
+					new Object[] { device.getDeviceId() });
+		}
+
 		return deviceList;
+	}
+
+	@Override
+	public int flashDeviceOnline(int deviceId) {
+		String sql = "UPDATE `znjj`.`device_list` SET ` device_online`=now() WHERE `device_id`=?;";
+		return this.exceuteUpdate(sql, new Object[] { deviceId });
 	}
 
 }

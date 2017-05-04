@@ -6,14 +6,15 @@ public class Device {
 	private String deviceName;
 	private String deviceStat;
 	private DeviceType deviceType;
-	private int device_onLine;
+	private String device_onLine;
+	private int device_gpio;
 
 	public Device() {
 		super();
 	}
 
 	public Device(int deviceId, int userId, String deviceName, String deviceStat, DeviceType deviceType,
-			int device_onLine) {
+			String device_onLine, int device_gpio) {
 		super();
 		this.deviceId = deviceId;
 		this.userId = userId;
@@ -21,6 +22,7 @@ public class Device {
 		this.deviceStat = deviceStat;
 		this.deviceType = deviceType;
 		this.device_onLine = device_onLine;
+		this.device_gpio = device_gpio;
 	}
 
 	public int getDeviceId() {
@@ -63,18 +65,27 @@ public class Device {
 		this.deviceType = deviceType;
 	}
 
-	public int getDevice_onLine() {
+	public String getDevice_onLine() {
 		return device_onLine;
 	}
 
-	public void setDevice_onLine(int device_onLine) {
+	public void setDevice_onLine(String device_onLine) {
 		this.device_onLine = device_onLine;
+	}
+
+	public int getDevice_gpio() {
+		return device_gpio;
+	}
+
+	public void setDevice_gpio(int device_gpio) {
+		this.device_gpio = device_gpio;
 	}
 
 	@Override
 	public String toString() {
 		return "Device [deviceId=" + deviceId + ", userId=" + userId + ", deviceName=" + deviceName + ", deviceStat="
-				+ deviceStat + ", deviceType=" + deviceType + ", device_onLine=" + device_onLine + "]";
+				+ deviceStat + ", deviceType=" + deviceType + ", device_onLine=" + device_onLine + ", device_gpio="
+				+ device_gpio + "]";
 	}
 
 }

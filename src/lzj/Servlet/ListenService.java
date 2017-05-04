@@ -16,14 +16,14 @@ import lzj.entity.User;
 /**
  * Servlet implementation class LoginAction
  */
-@WebServlet("/LoginAction")
-public class LoginAction extends HttpServlet {
+@WebServlet("/ListenService")
+public class ListenService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default constructor.
 	 */
-	public LoginAction() {
+	public ListenService() {
 	}
 
 	/**
@@ -38,11 +38,10 @@ public class LoginAction extends HttpServlet {
 		String password = request.getParameter("password");
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.findUserByUserNameAndPassWord(username, password);
-		// request.getSession().setAttribute("userObj", user);
+		request.setAttribute("userObj", user);
 		Gson gson = new Gson();
 		String info = gson.toJson(user);
 		response.getWriter().print(info);
-		// response.sendRedirect("index.jsp");
 	}
 
 	/**
@@ -51,7 +50,6 @@ public class LoginAction extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
