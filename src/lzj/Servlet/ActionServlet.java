@@ -20,10 +20,14 @@ import lzj.entity.User;
  * 
  * @注册
  * @登录
+ * @添加设备
+ * @刷新用户信息
+ * @控制开关
  */
 @WebServlet("/ActionServlet")
 public class ActionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private UserDao userDao = new UserDaoImpl();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -40,6 +44,30 @@ public class ActionServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		request.setCharacterEncoding("utf-8");
+		String stat = request.getParameter("stat");
+		System.out.println(stat);
+		if (stat.equals("flash")) {
+			// 刷新用户信息
+			this.flash(request, response);
+		}
+		if (stat.equals("onoff")) {
+			// 开关控制
+			int isoff = Integer.valueOf(request.getParameter("isoff"));
+			int deviceId = Integer.valueOf(request.getParameter("deviceId"));
+			System.out.println(isoff + "," + deviceId);
+			DeviceDao deviceDao = new DeviceDaoImpl();
+			switch (isoff) {
+			case 1:
+				deviceDao.statChange(isoff + "", deviceId);
+				break;
+
+			default:
+				deviceDao.statChange("0", deviceId);
+				break;
+			}
+			// 刷新用户信息
+			this.flash(request, response);
+		}
 	}
 
 	/**
@@ -50,11 +78,12 @@ public class ActionServlet extends HttpServlet {
 			throws ServletException, IOException {
 		doGet(request, response);
 		String stat = request.getParameter("stat");
+		System.out.println(stat);
 		if (stat.equals("login")) {
 			// 登录处理动作
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
-			UserDao userDao = new UserDaoImpl();
+
 			User user = userDao.findUserByUserNameAndPassWord(username, password);
 			request.getSession().setAttribute("userObj", user);
 			if (user != null) {
@@ -65,7 +94,6 @@ public class ActionServlet extends HttpServlet {
 			// 注册处理动作
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
-			UserDao userDao = new UserDaoImpl();
 			User user = new User();
 			user.setUserName(username);
 			user.setUserPassWord(password);
@@ -90,5 +118,12 @@ public class ActionServlet extends HttpServlet {
 			DeviceDao deviceDao = new DeviceDaoImpl();
 			deviceDao.addDevice(device);
 		}
+	}
+
+	@SuppressWarnings("unused")
+	private void flash(HttpServletRequest request, HttpServletResponse response) {
+		User user = (User) request.getSession().getAttribute("userObj");
+		user = userDao.findUserById(user.getUserId());
+		request.getSession().setAttribute("userObj", user);
 	}
 }

@@ -43,25 +43,29 @@ public class DeviceDaoImpl extends BaseDao implements DeviceDao {
 						new DeviceType(rs.getInt("device_type_id"), rs.getString("device_type_name")),
 						rs.getString("device_online"), rs.getInt("device_gpio"));
 				deviceList.add(device);
-				// this.flashDeviceOnline(rs.getInt("device_id"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			this.closeAll();
 		}
-		for (Device device : deviceList) {
-			this.exceuteUpdate("UPDATE `znjj`.`device_list` SET ` device_online`=now() WHERE `device_id`=?;",
-					new Object[] { device.getDeviceId() });
-		}
 
 		return deviceList;
 	}
 
+
 	@Override
-	public int flashDeviceOnline(int deviceId) {
-		String sql = "UPDATE `znjj`.`device_list` SET ` device_online`=now() WHERE `device_id`=?;";
-		return this.exceuteUpdate(sql, new Object[] { deviceId });
+	public int statChange(String stat, int deviceId) {
+		String sql = "UPDATE `znjj`.`device_list` SET `device_stat`=? WHERE `device_id`=?;";
+		return this.exceuteUpdate(sql, new Object[] { stat, deviceId });
+	}
+
+	@Override
+	public void flashOnlineTime(ArrayList<Device> deviceList) {
+		for (Device device : deviceList) {// 刷新在线时间
+			this.exceuteUpdate("UPDATE `znjj`.`device_list` SET ` device_online`=now() WHERE `device_id`=?;",
+					new Object[] { device.getDeviceId() });
+		}
 	}
 
 }

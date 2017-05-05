@@ -13,5 +13,7 @@ public interface DeviceDao {
 
 	public ArrayList<Device> findDeviceByUserId(int id);
 
-	public int flashDeviceOnline(int deviceId);
+	public int statChange(String stat, int deviceId);
+
+	public void flashOnlineTime(ArrayList<Device> deviceList);
 }

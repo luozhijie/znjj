@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import lzj.DAO.DeviceDao;
 import lzj.DAO.UserDao;
+import lzj.DaoImpl.DeviceDaoImpl;
 import lzj.DaoImpl.UserDaoImpl;
 import lzj.entity.User;
 
@@ -38,6 +40,8 @@ public class ListenService extends HttpServlet {
 		String password = request.getParameter("password");
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.findUserByUserNameAndPassWord(username, password);
+		DeviceDao deviceDao = new DeviceDaoImpl();
+		deviceDao.flashOnlineTime(user.getDeviceList());
 		request.setAttribute("userObj", user);
 		Gson gson = new Gson();
 		String info = gson.toJson(user);
