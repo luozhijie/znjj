@@ -45,10 +45,10 @@ public class ActionServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		request.setCharacterEncoding("utf-8");
 		String stat = request.getParameter("stat");
-		System.out.println(stat);
 		if (stat.equals("flash")) {
 			// 刷新用户信息
 			this.flash(request, response);
+			response.sendRedirect("Index.jsp");
 		}
 		if (stat.equals("onoff")) {
 			// 开关控制
@@ -67,6 +67,7 @@ public class ActionServlet extends HttpServlet {
 			}
 			// 刷新用户信息
 			this.flash(request, response);
+			response.sendRedirect("Index.jsp");
 		}
 	}
 
@@ -83,7 +84,6 @@ public class ActionServlet extends HttpServlet {
 			// 登录处理动作
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
-
 			User user = userDao.findUserByUserNameAndPassWord(username, password);
 			request.getSession().setAttribute("userObj", user);
 			if (user != null) {
@@ -117,6 +117,7 @@ public class ActionServlet extends HttpServlet {
 			device.setUserId(((User) request.getSession().getAttribute("userObj")).getUserId());
 			DeviceDao deviceDao = new DeviceDaoImpl();
 			deviceDao.addDevice(device);
+			response.sendRedirect("Index.jsp");
 		}
 	}
 
