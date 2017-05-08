@@ -58,6 +58,9 @@
 									+ (device.getDeviceStat().equals("0") ? "1" : "0") + "'>"
 									+ (device.getDeviceStat().equals("0") ? "开" : "关") + "</a>");
 						}
+						if (device.getDeviceType().getDeviceTypeId() == 3) {
+							out.print("<a href='ActionServlet?stat=looktemp&deviceId=" + device.getDeviceId() + "'>查看温湿度</a>");
+						}
 				%>
 			</td>
 		</tr>

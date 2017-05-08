@@ -69,6 +69,9 @@ public class ActionServlet extends HttpServlet {
 			this.flash(request, response);
 			response.sendRedirect("Index.jsp");
 		}
+		if(stat.equals("looktemp")){
+			
+		}
 	}
 
 	/**
