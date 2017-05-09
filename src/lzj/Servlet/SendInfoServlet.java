@@ -37,7 +37,10 @@ public class SendInfoServlet extends HttpServlet {
 			float temperature = Float.valueOf(request.getParameter("temperature"));
 			float humidity = Float.valueOf(request.getParameter("humidity"));
 			TempDao tempDao = new TempDaoImpl();
-			tempDao.addTemp(new Temp(0, deviceId, null, temperature, humidity));
+			int s = tempDao.addTemp(new Temp(0, deviceId, null, temperature, humidity));
+			if (s > 0) {
+				response.getWriter().print("OK");
+			}
 		}
 	}
 
