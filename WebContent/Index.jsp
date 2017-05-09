@@ -2,6 +2,7 @@
 <%@page import="lzj.entity.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,17 +11,13 @@
 </head>
 <jsp:useBean id="user" class="lzj.entity.User" scope="session"></jsp:useBean>
 <body>
-	<%
-		user = (User) request.getSession().getAttribute("userObj");
-		if (user == null) {
-			out.print(
-					"<script language='javascript' type='text/javascript'>window.location.href='login.jsp'</script>");
-			return;
-		}
-	%>
-	<p>
-		欢迎<%=user.getUserName()%>
-	</p>
+	<c:if test="${userObj == null }">
+		<script language='javascript' type='text/javascript'>
+			window.location.href = 'login.jsp'
+		</script>
+	</c:if>
+
+	<p>欢迎${userObj.userName }</p>
 	<a href="AddDevice.jsp">添加设备</a>
 	<br>
 	<a href="DelDevice.jsp">删除设备</a>
@@ -38,35 +35,24 @@
 			<th>gpio</th>
 			<th>操作</th>
 		</tr>
-		<%
-			for (Device device : user.getDeviceList()) {
-		%>
-		<tr>
-			<td><%=device.getDeviceId()%></td>
-			<td><%=device.getDeviceName()%></td>
-			<td><%=device.getDeviceType().getDeviceTypeName()%></td>
-			<td><%=device.getDevice_onLine()%></td>
-			<td><%=device.getDevice_gpio()%></td>
-			<td>
-				<%
-					if (device.getDeviceType().getDeviceTypeId() == 1) {
-							out.print("<a href=''>管理遥控器</a>");
-						}
+		<c:forEach items="${userObj.deviceList }" var="device">
+			<tr>
+				<td>${device.deviceId }</td>
+				<td>${device.deviceName }</td>
+				<td>${device.deviceType.deviceTypeName }</td>
+				<td>${device.device_onLine }</td>
+				<td>${device.device_gpio }</td>
+				<td><c:if test="${device.deviceType.deviceTypeId == 1 }">
+						<a href="">管理遥控器</a>
+					</c:if> <c:if test="${device.deviceType.deviceTypeId == 2 }">
+						<a
+							href="ActionServlet?stat=onoff&deviceId=${device.deviceId }&isoff=${device.deviceStat==0?'1':'0' }">${device.deviceStat==0?'开':'关' }</a>
+					</c:if> <c:if test="${device.deviceType.deviceTypeId == 3 }">
+						<a href="ActionServlet?stat=looktemp&deviceId=${device.deviceId }">查看温湿度</a>
+					</c:if></td>
+			</tr>
+		</c:forEach>
 
-						if (device.getDeviceType().getDeviceTypeId() == 2) {
-							out.print("<a href='ActionServlet?stat=onoff&deviceId=" + device.getDeviceId() + "&isoff="
-									+ (device.getDeviceStat().equals("0") ? "1" : "0") + "'>"
-									+ (device.getDeviceStat().equals("0") ? "开" : "关") + "</a>");
-						}
-						if (device.getDeviceType().getDeviceTypeId() == 3) {
-							out.print("<a href='ActionServlet?stat=looktemp&deviceId=" + device.getDeviceId() + "'>查看温湿度</a>");
-						}
-				%>
-			</td>
-		</tr>
-		<%
-			}
-		%>
 	</table>
 </body>
 </html>

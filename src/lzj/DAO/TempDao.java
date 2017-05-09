@@ -12,4 +12,6 @@ public interface TempDao {
 	public int updateTemp(Temp temp);
 
 	public List<Temp> findTempByDeviceId(int deviceId);
+	
+	public List<Temp> findTempByDeviceIdAndLimit(int deviceId,int limit);
 }

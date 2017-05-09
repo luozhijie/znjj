@@ -46,4 +46,22 @@ public class TempDaoImpl extends BaseDao implements TempDao {
 		return tempList.isEmpty() ? null : tempList;
 	}
 
+	@Override
+	public List<Temp> findTempByDeviceIdAndLimit(int deviceId, int limit) {
+
+		String sql = "SELECT * FROM znjj.temp_list where device_id=? limit ?;";
+		ResultSet rs = this.execeuteQuary(sql, new Object[] { deviceId, limit });
+		List<Temp> tempList = new ArrayList<>();
+		try {
+			while (rs.next()) {
+				Temp temp = new Temp(rs.getInt("temp_id"), rs.getInt("device_id"), rs.getString("time"),
+						rs.getFloat("temperature"), rs.getFloat("humidity"));
+				tempList.add(temp);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tempList.isEmpty() ? null : tempList;
+	}
+
 }
