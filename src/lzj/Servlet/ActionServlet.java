@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lzj.DAO.DeviceDao;
+import lzj.DAO.DeviceTypeDao;
 import lzj.DAO.TempDao;
 import lzj.DAO.UserDao;
 import lzj.DaoImpl.DeviceDaoImpl;
+import lzj.DaoImpl.DeviceTypeDaoImpl;
 import lzj.DaoImpl.TempDaoImpl;
 import lzj.DaoImpl.UserDaoImpl;
 import lzj.entity.Device;
@@ -52,7 +54,7 @@ public class ActionServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		String url = "";
 		String stat = request.getParameter("stat");
-		// System.out.println(stat);
+		System.out.println(stat);
 		if (stat.equals("login")) {
 			// 登录处理动作
 			String username = request.getParameter("username");
@@ -110,24 +112,34 @@ public class ActionServlet extends HttpServlet {
 			request.setAttribute("userObj", user);
 			if (user != null) {
 				// response.sendRedirect("Index.jsp");
-				url="Index.jsp";
-			}
-			if (stat.equals("addDevice")) {
-				// 添加设备
-				String deviceName = request.getParameter("deviceName");
-				int deviceTypeId = Integer.valueOf(request.getParameter("deviceTypeId"));
-				int gpio = Integer.valueOf(request.getParameter("gpio"));
-				Device device = new Device();
-				device.setDeviceName(deviceName);
-				device.setDeviceType(new DeviceType(deviceTypeId, null));
-				device.setDevice_gpio(gpio);
-				device.setUserId(((User) request.getSession().getAttribute("userObj")).getUserId());
-				DeviceDao deviceDao = new DeviceDaoImpl();
-				deviceDao.addDevice(device);
-				// response.sendRedirect("Index.jsp");
-				this.flash(request, response);
 				url = "Index.jsp";
 			}
+		}
+		if (stat.equals("addDevice")) {
+			// 添加设备
+			DeviceTypeDao deviceTypeDao = new DeviceTypeDaoImpl();
+			List<DeviceType> deviceTypeList = deviceTypeDao.findAllDevicetype();
+			request.setAttribute("deviceTypeList", deviceTypeList);
+			url = "AddDevice.jsp";
+		}
+		if (stat.equals("addDeviceAction")) {
+			// 添加设备动作
+			String deviceName = request.getParameter("deviceName");
+			int deviceTypeId = Integer.valueOf(request.getParameter("deviceTypeId"));
+			int gpio = Integer.valueOf(request.getParameter("gpio"));
+			Device device = new Device();
+			device.setDeviceName(deviceName);
+			device.setDeviceType(new DeviceType(deviceTypeId, null));
+			device.setDevice_gpio(gpio);
+			device.setUserId(((User) request.getSession().getAttribute("userObj")).getUserId());
+			DeviceDao deviceDao = new DeviceDaoImpl();
+			deviceDao.addDevice(device);
+			// response.sendRedirect("Index.jsp");
+			this.flash(request, response);
+			url = "Index.jsp";
+		}
+		if(stat.equals("gas")){
+			//可燃性传感器 页面
 			
 		}
 		request.getRequestDispatcher(url).forward(request, response);
@@ -143,9 +155,7 @@ public class ActionServlet extends HttpServlet {
 		String url = "";
 		String stat = request.getParameter("stat");
 
-		
-		
-//		request.getRequestDispatcher(url).forward(request, response);
+		// request.getRequestDispatcher(url).forward(request, response);
 	}
 
 	@SuppressWarnings("unused")

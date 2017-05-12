@@ -18,7 +18,7 @@
 	</c:if>
 
 	<p>欢迎${userObj.userName }</p>
-	<a href="AddDevice.jsp">添加设备</a>
+	<a href="ActionServlet?stat=addDevice">添加设备</a>
 	<br>
 	<a href="DelDevice.jsp">删除设备</a>
 	<br>
@@ -49,7 +49,12 @@
 							href="ActionServlet?stat=onoff&deviceId=${device.deviceId }&isoff=${device.deviceStat==0?'1':'0' }">${device.deviceStat==0?'开':'关' }</a>
 					</c:if> <c:if test="${device.deviceType.deviceTypeId == 3 }">
 						<a href="ActionServlet?stat=looktemp&deviceId=${device.deviceId }">查看温湿度</a>
-					</c:if></td>
+					</c:if>
+					<c:if test="${device.deviceType.deviceTypeId == 4">
+						<a href="ActionServlet?stat=gas&deviceId=${device.deviceId }">查看信息</a>
+					</c:if>
+				</td>
+					
 			</tr>
 		</c:forEach>
 
