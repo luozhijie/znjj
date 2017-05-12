@@ -15,4 +15,5 @@ public interface DeviceDao {
 	public int statChange(String stat, int deviceId);
 
 	public void flashOnlineTime(ArrayList<Device> deviceList);
+	
 }
