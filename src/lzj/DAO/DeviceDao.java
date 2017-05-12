@@ -1,7 +1,6 @@
 package lzj.DAO;
 
 import java.util.ArrayList;
-
 import lzj.entity.Device;
 
 public interface DeviceDao {
