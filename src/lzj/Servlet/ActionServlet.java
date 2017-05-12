@@ -12,14 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import lzj.DAO.DeviceDao;
 import lzj.DAO.DeviceTypeDao;
+import lzj.DAO.GasSensorDao;
 import lzj.DAO.TempDao;
 import lzj.DAO.UserDao;
 import lzj.DaoImpl.DeviceDaoImpl;
 import lzj.DaoImpl.DeviceTypeDaoImpl;
+import lzj.DaoImpl.GasSensorDaoImpl;
 import lzj.DaoImpl.TempDaoImpl;
 import lzj.DaoImpl.UserDaoImpl;
 import lzj.entity.Device;
 import lzj.entity.DeviceType;
+import lzj.entity.GasSensor;
 import lzj.entity.Temp;
 import lzj.entity.User;
 
@@ -138,9 +141,24 @@ public class ActionServlet extends HttpServlet {
 			this.flash(request, response);
 			url = "Index.jsp";
 		}
-		if(stat.equals("gas")){
-			//可燃性传感器 页面
-			
+		if (stat.equals("gas")) {
+			// 可燃性传感器 页面
+			int deviceId = Integer.valueOf(request.getParameter("deviceId"));
+			GasSensorDao gasSensorDao = new GasSensorDaoImpl();
+			List<GasSensor> gasSensorList = gasSensorDao.findGasSensorByDeviceId(deviceId);
+			request.setAttribute("gasSensorList", gasSensorList);
+			request.getSession().setAttribute("gasDeviceId", deviceId);
+			url = "GasSensorInfo.jsp";
+		}
+		if (stat.equals("gasCheck")) {
+			// 可燃性传感器确认
+			int gid = Integer.valueOf(request.getParameter("gid"));
+			GasSensorDao gasSensorDao = new GasSensorDaoImpl();
+			gasSensorDao.updateGasSensorIsCheckByGid(gid);
+			int deviceId = (Integer) request.getSession().getAttribute("gasDeviceId");
+			List<GasSensor> gasSensorList = gasSensorDao.findGasSensorByDeviceId(Integer.valueOf(deviceId));
+			request.setAttribute("gasSensorList", gasSensorList);
+			url = "GasSensorInfo.jsp";
 		}
 		request.getRequestDispatcher(url).forward(request, response);
 	}
